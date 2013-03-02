@@ -4,7 +4,7 @@ public class TerrainTile
 {
 	private String img;
 	private Type type;
-	public static int width = 32, height = 32;
+	public static int Width = 64, Height = 64;
 	
 	public static enum Type
 	{

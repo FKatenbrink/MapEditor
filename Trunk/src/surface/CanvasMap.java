@@ -3,9 +3,11 @@ package surface;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 import javax.swing.JPanel;
 
@@ -19,6 +21,7 @@ public class CanvasMap extends JPanel
 	private BufferedImage bufImg, curImg;
 	private CanvasMiniMap miniMap;
 	private PictureList pl;
+	private BufferedImage[][] tileMap;
 	
 	private MouseListener mouseListener = new MouseListener()
 	{
@@ -28,8 +31,16 @@ public class CanvasMap extends JPanel
 		{
 			BufferedImage bi = pl.getFocusedImg();
 			if(bi != null)
-				curImg = bi;
-			repaint();
+			{
+				int xI = me.getX()/TerrainTile.Width;
+				int yI = me.getY()/TerrainTile.Height;
+				int xPos = xI*TerrainTile.Width;
+				int yPos = yI*TerrainTile.Height;;
+				tileMap[xI][yI] = bi;
+				Rectangle rect = new Rectangle(xPos, yPos, xPos + TerrainTile.Width, yPos + TerrainTile.Height);
+				repaint(rect);
+				miniMap.repaint(bi, rect);
+			}
 		}
 
 		@Override
@@ -62,23 +73,28 @@ public class CanvasMap extends JPanel
 	public CanvasMap(int x, int y, PictureList pl)
 	{
 		super();
-		terrain = new Terrain(x, y);
-		init();
-		this.pl = pl;
-		this.addMouseListener(mouseListener);
+		init(x, y, null, pl);
 	}
 	
 	public CanvasMap(TerrainTile[][] tt, PictureList pl)
 	{
 		super();
-		terrain = new Terrain(tt);
-		init();
-		this.pl = pl;
-		this.addMouseListener(mouseListener);
+		init(-1, -1, tt, pl);
 	}
 	
-	private void init()
+	private void init(int x, int y, TerrainTile[][] tt, PictureList pl)
 	{
+		if(tt != null)
+		{
+			terrain = new Terrain(tt);
+			this.tileMap = new BufferedImage[tt.length][tt[0].length];
+		}
+		else
+		{
+			terrain = new Terrain(x, y);
+			this.tileMap = new BufferedImage[x][y];
+		}
+		
 		//stdImg
 		curImg = new BufferedImage(terrain.getTileW(), terrain.getTileH(), BufferedImage.TYPE_INT_RGB);
 		Graphics g = curImg.getGraphics();
@@ -92,6 +108,11 @@ public class CanvasMap extends JPanel
 		
 		this.setPreferredSize(new Dimension(bufImg.getWidth(), bufImg.getHeight()));
 		miniMap = new CanvasMiniMap(bufImg);
+		
+		this.pl = pl;
+		this.addMouseListener(mouseListener);
+		for(BufferedImage[] bi : tileMap)
+		Arrays.fill(bi, curImg);
 	}
 	
 	public CanvasMiniMap getMiniMap()
@@ -106,20 +127,18 @@ public class CanvasMap extends JPanel
 		super.paint(g);
 		int w = terrain.getW();
 		int h = terrain.getH();
-		int tileW = terrain.getTileW();
-		int tileH = terrain.getTileH();
 		
 		for(int i = 0; i < w; i++)
 		{
 			for(int j = 0; j < h; j++)
 			{
 				if(terrain.getTile(i, j) == null)
-					g.drawImage(curImg, i*tileW, j*tileH, null);
+					g.drawImage(tileMap[i][j], i*TerrainTile.Width, j*TerrainTile.Height, null);
 			}
 		}
 		
 		gra.drawImage(bufImg, 0, 0, null);
 		
-		miniMap.setImg(bufImg);
+		miniMap.repaint(bufImg);
 	}
 }

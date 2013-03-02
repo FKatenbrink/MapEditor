@@ -21,7 +21,7 @@ public class TileIcon implements Icon, Serializable
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y)
 	{
-		g.drawImage(refImg, 0, 0, TerrainTile.width, TerrainTile.height, c);
+		g.drawImage(refImg, 0, 0, TerrainTile.Width, TerrainTile.Height, c);
 	}
 	
 	public BufferedImage getImage()

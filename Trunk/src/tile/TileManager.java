@@ -1,5 +1,7 @@
 package tile;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +17,7 @@ import misc.Tuple;
 public class TileManager
 {
 	public static ImagePool Tiles = new ImagePool();
+	public static int W = 32, H = 32;
 	
 	public static DefaultListModel getModel()
 	{
@@ -42,7 +45,12 @@ public class TileManager
 			{
 				split = temp.split(";");
 				BufferedImage bi = ImageIO.read(new File(split[1]));
-				Tiles.addItem(split[0], new Tuple<String, BufferedImage>(split[1], bi));
+				
+				BufferedImage img = new BufferedImage(TerrainTile.Width, TerrainTile.Height, BufferedImage.TYPE_INT_RGB);
+				Graphics g = img.getGraphics();
+				g.drawImage(bi, 0, 0, TerrainTile.Width, TerrainTile.Height, null);
+
+				Tiles.addItem(split[0], new Tuple<String, BufferedImage>(split[1], img));
 			}
 		}
 		catch (IOException ex)

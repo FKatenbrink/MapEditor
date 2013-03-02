@@ -8,7 +8,7 @@ public class Terrain
 	
 	public Terrain(int w, int h)
 	{
-		this(w, h, TerrainTile.width, TerrainTile.height);
+		this(w, h, TerrainTile.Width, TerrainTile.Height);
 	}
 	
 	public Terrain(int w, int h, int tileW, int tileH)
@@ -45,7 +45,7 @@ public class Terrain
 		return h;
 	}
 	
-	//IMGs in der CanvasMap verÃ¤ndern
+	//IMGs in der CanvasMap verŠndern
 	public void setTileW(int tileW)
 	{
 		this.tileW = tileW;

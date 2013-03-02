@@ -28,8 +28,8 @@ public class PictureList extends JList
 		setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		setVisibleRowCount(-1);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		setFixedCellWidth((int)1.5*TerrainTile.width);
-		setFixedCellHeight((int)1.5*TerrainTile.height);
+		setFixedCellWidth((int)1.5*TerrainTile.Width);
+		setFixedCellHeight((int)1.5*TerrainTile.Height);
 	}
 	
 	public void addItem(BufferedImage img)

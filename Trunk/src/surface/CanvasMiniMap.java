@@ -3,7 +3,9 @@ package surface;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 
 public class CanvasMiniMap extends JPanel
@@ -17,9 +19,15 @@ public class CanvasMiniMap extends JPanel
 		this.setPreferredSize(new Dimension(this.bufImg.getWidth(), this.bufImg.getHeight()));
 	}
 	
-	public void setImg(BufferedImage img)
+	public void repaint(BufferedImage img)
 	{
 		initImg(img);
+	}
+	
+	public void repaint(BufferedImage img, Rectangle rect)
+	{
+		bufImg.getGraphics().drawImage(img, rect.x/4, rect.y/4, null);
+		repaint(rect.x/4, rect.y/4, rect.width/4, rect.height/4);
 	}
 	
 	private void initImg(BufferedImage img)
